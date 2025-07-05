@@ -18,12 +18,13 @@ import {
 import { Tabs, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { useState } from "react";
+import { data, useNavigate } from "react-router-dom";
 
 const Landing = () => {
   const cards = [
     {
       id: 1,
-      price: "234,378,123",
+      price: "araku",
       topic:
         "Explore lush coffee plantations and scenic valleys wrapped in morning mist",
       image: araku,
@@ -31,7 +32,7 @@ const Landing = () => {
     },
     {
       id: 2,
-      price: "103,000",
+      price: "charminar",
       topic:
         "Discover Hyderabad’s iconic monument bustling with heritage, markets, and flavours.",
       image: charminar,
@@ -39,7 +40,7 @@ const Landing = () => {
     },
     {
       id: 5,
-      price: "234,378,123",
+      price: "lepakshi",
       topic:
         "Witness ancient sculptures, hanging pillar wonders, and timeless temple art",
       image: lepakshi,
@@ -47,7 +48,7 @@ const Landing = () => {
     },
     {
       id: 6,
-      price: "103,000",
+      price: "shimla",
       topic:
         "Relax in pine-scented hills with breathtaking colonial charm and cool breeze",
       image: shimla,
@@ -55,7 +56,7 @@ const Landing = () => {
     },
     {
       id: 7,
-      price: "25,000,000",
+      price: "tirupathi",
       topic:
         "Seek Lord Venkateswara’s blessings at the world’s richest sacred temple.",
       image: tirupathi,
@@ -63,21 +64,21 @@ const Landing = () => {
     },
     {
       id: 8,
-      price: "3,120,000",
+      price: "vizag",
       topic: "Unwind by serene beaches and rolling hills meeting the vast sea.",
       image: vizag,
       circleText: "Worth Your Time",
     },
     {
       id: 9,
-      price: "3,120,000",
+      price: "kasi",
       topic: "Feel spiritual awakening on Ganga’s ghats with chants and diyas.",
       image: kasi,
       circleText: "Top Rated Choice",
     },
     {
       id: 10,
-      price: "3,120,000",
+      price: "tajmahal",
       topic:
         "Experience India’s symbol of love in pristine white marble splendour.",
       image: tajmahal,
@@ -164,7 +165,29 @@ const Landing = () => {
   const Container = ({ children }) => (
     <div className="md:w-11/12 w-full md:px-0 px-3 mx-auto">{children}</div>
   );
+  const navigate = useNavigate();
   const [searchBar, setSearchBar] = useState(false);
+  const [typedplace, settypedplace] = useState("");
+  const isLoggedIn = !!localStorage.getItem("username");
+  const handletypedplalce = () => {
+    if (typedplace.length === 0) {
+      alert("enter place you want to visit");
+      return;
+    }
+    if (typedplace.length > 0 && !isLoggedIn) {
+      navigate("/login");
+    } else if (typedplace.length > 0 && isLoggedIn) {
+      navigate("/photographers", { state: { data: typedplace } });
+    }
+  };
+
+  const handleselectedplace = (place) => {
+    if (isLoggedIn) {
+      navigate("/photographers", { state: { data: place } });
+    } else {
+      navigate("/login");
+    }
+  };
   return (
     <div>
       <section className="z-10">
@@ -179,8 +202,12 @@ const Landing = () => {
                     type="text"
                     placeholder="Search by Place,Location"
                     className="bg-white bg-opacity-50 focus:bg-opacity-100 border-[1px] border-white outline-none px-4 py-2 rounded-md sm:w-[500px] w-[300px] placeholder-white"
+                    onChange={(e) => settypedplace(e.target.value)}
                   />
-                  <button className="bg-white px-2 py-3 w-24 font-bold uppercase text-sm text-black hover:text-white hover:bg-black hover:bg-opacity-50 rounded-md">
+                  <button
+                    className="bg-white px-2 py-3 w-24 font-bold uppercase text-sm text-black hover:text-white hover:bg-black hover:bg-opacity-50 rounded-md"
+                    onClick={() => handletypedplalce()}
+                  >
                     Find
                   </button>
                 </form>
@@ -238,71 +265,12 @@ const Landing = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-4 my-4 px-2">
-                    <h1 className="bg-[#5c807162] px-3 py-1 rounded-md text-[#6D9886] text-[17px] font-medium">
-                      € {card.price}
-                    </h1>
-                  </div>
-                  <h2 className="font-bold text-[17px] px-2 hover:text-[#6D9886] transition-colors cursor-pointer">
-                    {card.topic}
-                  </h2>
-                </div>
-              ))}
-            </article>
-          </TabPanel>
-
-          <TabPanel>
-            <p>Something else not available yet</p>
-          </TabPanel>
-
-          <TabPanel>
-            <article className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 place-items-center lg:gap-14 gap-4">
-              {cards.map((card) => (
-                <div className="h-[550px] w-[320px]" key={card.id}>
-                  <div className="relative rounded-xl overflow-hidden w-96 h-60 object-cover">
-                    <img
-                      src={card.image}
-                      alt={card.topic}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-4 uppercase right-4 leading-tight font-bold w-[70px] h-[70px] flex items-center justify-center bg-white text-black rounded-full text-[10px] text-center">
-                      {card.circleText}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 my-4 px-2">
-                    <h1 className="bg-[#5c807162] px-3 py-1 rounded-md text-[#6D9886] text-[17px] font-medium">
-                      € {card.price}
-                    </h1>
-                  </div>
-                  <h2 className="font-bold text-[17px] px-2 hover:text-[#6D9886] transition-colors cursor-pointer">
-                    {card.topic}
-                  </h2>
-                </div>
-              ))}
-            </article>
-          </TabPanel>
-
-          <TabPanel>
-            <p>Something else not available yet</p>
-          </TabPanel>
-
-          <TabPanel>
-            <article className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 place-items-center lg:gap-14 gap-4">
-              {cards.map((card) => (
-                <div className="h-[550px] w-[320px]" key={card.id}>
-                  <div className="relative rounded-xl overflow-hidden w-96 h-60 object-cover">
-                    <img
-                      src={card.image}
-                      alt={card.topic}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-4 uppercase right-4 leading-tight font-bold w-[70px] h-[70px] flex items-center justify-center bg-white text-black rounded-full text-[10px] text-center">
-                      {card.circleText}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 my-4 px-2">
-                    <h1 className="bg-[#5c807162] px-3 py-1 rounded-md text-[#6D9886] text-[17px] font-medium">
-                      € {card.price}
-                    </h1>
+                    <button
+                      className="bg-[#5c807162] px-3 py-1 rounded-md text-[#6D9886] text-[17px] font-medium justify-center"
+                      onClick={() => handleselectedplace(card.price)}
+                    >
+                      {card.price}
+                    </button>
                   </div>
                   <h2 className="font-bold text-[17px] px-2 hover:text-[#6D9886] transition-colors cursor-pointer">
                     {card.topic}

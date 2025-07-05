@@ -16,12 +16,20 @@ import {
   saveToken,
 } from "../UTILS/Local";
 import { toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
 const Photographers = () => {
   const [place, setplace] = useState("");
   const [photographers, setphotographers] = useState([]);
   const [sending, setsending] = useState(false);
   const [date, setdate] = useState("");
+  const location = useLocation();
+  useEffect(() => {
+    const data = location.state?.data || location.state?.message;
+    if (data && data.length > 0) {
+      setplace(data);
+    }
+  }, [location.state]);
 
   const getphotographers = async () => {
     try {
